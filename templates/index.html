@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SMS Spam Classifier</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; }
+        .container { margin-top: 50px; background: white; padding: 30px; display: inline-block; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
+        textarea { width: 100%; padding: 10px; border-radius: 5px; }
+        button { padding: 10px 20px; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 5px; }
+        .spam { color: red; font-weight: bold; }
+        .ham { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SMS Spam Classifier</h1>
+        <form action="/predict" method="POST">
+            <textarea name="message" rows="6" placeholder="Enter your SMS here..." required></textarea>
+            <br><br>
+            <button type="submit">Predict</button>
+        </form>
+
+        {% if prediction is defined %}
+            <h2>Result: 
+                {% if prediction == 1 %}
+                    <span class="spam">SPAM!</span>
+                {% else %}
+                    <span class="ham">NOT SPAM (HAM)</span>
+                {% endif %}
+            </h2>
+        {% endif %}
+    </div>
+</body>
+</html>
