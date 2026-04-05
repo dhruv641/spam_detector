@@ -2,33 +2,182 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SMS Spam Classifier</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Spam Sentinel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; }
-        .container { margin-top: 50px; background: white; padding: 30px; display: inline-block; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
-        textarea { width: 100%; padding: 10px; border-radius: 5px; }
-        button { padding: 10px 20px; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 5px; }
-        .spam { color: red; font-weight: bold; }
-        .ham { color: green; font-weight: bold; }
+        :root {
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --bg: #0f172a;
+            --card: rgba(30, 41, 59, 0.7);
+            --text: #f8fafc;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at top left, #1e1b4b, #0f172a);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Animated Background Blobs */
+        .blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            filter: blur(80px);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.2;
+            animation: move 20s infinite alternate;
+        }
+
+        @keyframes move {
+            from { transform: translate(-20%, -20%); }
+            to { transform: translate(20%, 20%); }
+        }
+
+        .container {
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p { color: #94a3b8; margin-bottom: 2rem; font-size: 0.9rem; }
+
+        .input-group { position: relative; margin-bottom: 1.5rem; }
+
+        textarea {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid #334155;
+            border-radius: 16px;
+            padding: 1rem;
+            color: white;
+            font-family: inherit;
+            resize: none;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.5);
+        }
+
+        .result-box {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 16px;
+            animation: scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .spam {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #f87171;
+        }
+
+        .ham {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid #22c55e;
+            color: #4ade80;
+        }
+
+        .status-icon { font-size: 2rem; margin-bottom: 0.5rem; }
     </style>
 </head>
 <body>
+    <div class="blob"></div>
+    
     <div class="container">
-        <h1>SMS Spam Classifier</h1>
+        <i class="fas fa-shield-halved" style="font-size: 2.5rem; color: #818cf8; margin-bottom: 1rem;"></i>
+        <h1>AI Spam Sentinel</h1>
+        <p>Advanced SMS Classification Engine</p>
+
         <form action="/predict" method="POST">
-            <textarea name="message" rows="6" placeholder="Enter your SMS here..." required></textarea>
-            <br><br>
-            <button type="submit">Predict</button>
+            <div class="input-group">
+                <textarea name="message" rows="5" placeholder="Paste suspicious message here..." required></textarea>
+            </div>
+            <button type="submit">
+                <i class="fas fa-bolt"></i> Analyze Message
+            </button>
         </form>
 
         {% if prediction is defined %}
-            <h2>Result: 
-                {% if prediction == 1 %}
-                    <span class="spam">SPAM!</span>
-                {% else %}
-                    <span class="ham">NOT SPAM (HAM)</span>
-                {% endif %}
-            </h2>
+            <div class="result-box {% if prediction == 1 %}spam{% else %}ham{% endif %}">
+                <div class="status-icon">
+                    {% if prediction == 1 %}
+                        <i class="fas fa-triangle-exclamation"></i>
+                    {% else %}
+                        <i class="fas fa-circle-check"></i>
+                    {% endif %}
+                </div>
+                <h3 style="margin: 0;">
+                    {% if prediction == 1 %}
+                        THREAT DETECTED: SPAM
+                    {% else %}
+                        SECURE: HAM MESSAGE
+                    {% endif %}
+                </h3>
+            </div>
         {% endif %}
     </div>
 </body>
